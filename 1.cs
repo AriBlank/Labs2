@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
-
+class Program
+{
     static void Main()
     {
-        var generator = CyclicDaysGenerator();
-        ConsumeWithTimeout(generator, 5);
+        var generator = DayGenerator();
+        TimeoutIterator(generator, 5);
     }
 
-    public static IEnumerable<string> CyclicDaysGenerator()
+    static IEnumerable<string> DayGenerator()
     {
         string[] days = 
         {
@@ -22,7 +23,7 @@ using System.Threading;
             "Saturday",
             "Sunday"
         };
-
+        
         int index = 0;
 
         while (true)
@@ -32,7 +33,7 @@ using System.Threading;
         }
     }
 
-    public static void ConsumeWithTimeout(IEnumerable<string> generator, int seconds)
+    static void TimeoutIterator(IEnumerable<string> generator, int seconds)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -44,4 +45,5 @@ using System.Threading;
             Console.WriteLine($"{DateTime.Now:T} - {day}");
             Thread.Sleep(500);
         }
-    }
+    }   
+}
