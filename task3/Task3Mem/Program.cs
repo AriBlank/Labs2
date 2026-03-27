@@ -8,7 +8,7 @@ class Program
     {
         Func<int, int> cube = x => x*x*x;
 
-        var memo = new Memoizer<int, int>(cube);
+        var memo = new Memoizer<int, int>(cube, 5);
 
         while(true) {
             Console.Write("Enter the argument for function:");
