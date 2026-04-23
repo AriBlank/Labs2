@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 public class Item
 {
@@ -13,10 +14,40 @@ public class Item
 public class PriorityQueue
 {
     private List<Item> items = new List<Item>();
+    private List<Item> maxPriorityItem = new List<Item>();
+
+    private List<Item> minPriorityItem = new List<Item>();
+
     public void enqueue(string name, int priority) //додає елемент у чергу
     {
+        var newItem = new Item(name, priority);
         items.Add(new Item(name, priority));
+
+        int index = 0;
+        foreach(var currentItem in maxPriorityItem)
+        {
+            if(newItem.Priority > currentItem.Priority )
+            {
+                break;
+            }
+            index++;
+        }
+
+        maxPriorityItem.Insert(index, newItem);
+
+        // int indexForMin = 0;
+        // foreach(var currentItem in minPriorityItem)
+        // {
+        //     if(currentItem.Priority > newItem.Priority)
+        //     {
+        //         break;
+        //     }
+        //     indexForMin++;
+        // }
+
+        // minPriorityItem.Insert(indexForMin, newItem);
     }
+
 
     public void DeleteHighest() //видаляє елемент з найбільшим пріоритетом
     {
@@ -56,23 +87,26 @@ public class PriorityQueue
         items.RemoveAt(items.Count - 1);
     }
 
-    public void ShowQueue()
+
+    public void ShowQueue(int typeLists)
     {
-        foreach (var item in items)
+        switch (typeLists)
         {
-            Console.WriteLine($"{item.Name} ({item.Priority})");
+            case 1:
+                foreach (var item in items)
+                {
+                    Console.WriteLine($"{item.Name} ({item.Priority})");
+                }
+                break;
+
+            case 2:
+                foreach (var item in maxPriorityItem)
+                {
+                    Console.WriteLine($"{item.Name} ({item.Priority})");
+                }
+                break;
         }
     }
-
-    // public bool CheckForExist()
-    // {
-    //     if(items.Count == 0)
-    //     {
-    //         Console.WriteLine("Queue is empty");
-    //         return false;
-    //     }
-    //     return true;
-    // }
 }
 
 class Program
@@ -81,10 +115,22 @@ class Program
     {
         var queue = new PriorityQueue();
         while(true){
-            Console.WriteLine("Enter:\n 1 - add element\n 2 - delete highest\n 3 - delete lowest\n 4 - delete oldest\n 5 - delete newest\n 6 - show queue");
+            Start:
+            Console.WriteLine("Enter:\n 1 - add element\n 2 - delete highest\n 3 - delete lowest\n 4 - delete oldest\n 5 - delete newest\n 6 - show queue\n 7 - show ordered queue");
+            
+            string entryValue = Console.ReadLine();
+            bool allNumbers = entryValue.All(char.IsDigit);
 
-            int choice = int.Parse(Console.ReadLine());
+            if(allNumbers == false || string.IsNullOrWhiteSpace(entryValue) == true)
+            {
+                Console.WriteLine("any options were not choosen or input was invalid");
+                
+                goto Start;
+            }
 
+            int choice = int.Parse(entryValue);
+
+            
             switch(choice)
             {
                 case 1:
@@ -114,7 +160,15 @@ class Program
                     break;
 
                 case 6:
-                    queue.ShowQueue();
+                    queue.ShowQueue(1);
+                    break;
+
+                case 7: 
+                    queue.ShowQueue(2);
+                    break;
+
+                default:
+                    Console.WriteLine("not valid number");
                     break;
             }
         }
