@@ -75,3 +75,51 @@ public class Entity
     }
     
 }
+public static class Program
+{
+    public static void Main()
+    {
+        var broker = new MessageBroker();
+
+        var hatsune = new Entity("Hatsune", broker);
+        var zxcgul = new Entity("ZXCGul", broker);
+        var viego = new Entity("viego", broker);
+        var dave = new Entity("dave", broker);
+
+        hatsune.SubscribeAll();              
+        zxcgul.SubscribeFrom("Hatsune");      
+        viego.SubscribeAll(); 
+
+        Console.WriteLine("\n sending a message from Hatsune");
+        hatsune.SendMessage("green onion");
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("\n sending a message from ZXCGul");
+        zxcgul.SendMessage("1000-7");
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("\ndave subscribing on all messages");
+        dave.SubscribeAll();
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("\nsending a message from viego");
+        viego.SendMessage("oh, Isolde");
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("\nZXCGul unsubscribing");
+        zxcgul.Unsubscribe();
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("\nsending a message from Hatsune after ZXCGul unsubscribed");
+        hatsune.SendMessage("zxcgul cannot see this message");
+
+  
+        Console.WriteLine("\npress any key to stop");
+        Console.ReadKey();
+    }
+}
